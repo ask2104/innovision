@@ -1,4 +1,5 @@
 import { ref, set, remove } from 'firebase/database';
+import { db } from '../firebase.js'; // Corrected import path to db
 
 // Handles updates from the 3PhaseMonitoring path
 export const handleMonitoringUpdate = (rawData, setNodes, setMonitoringData) => {
@@ -19,14 +20,17 @@ export const handleMonitoringUpdate = (rawData, setNodes, setMonitoringData) => 
 
       if (newTwids.length > 0) {
         let lastNode = currentNodes.length > 0 ? [...currentNodes].sort((a,b) => a.id.localeCompare(b.id)).pop() : null;
-        
+        const defaultLat = 19.2187;
+        const defaultLng = 73.1256;
+
         newTwids.forEach((newTwid, index) => {
           const nextIdNumber = (lastNode ? parseInt(lastNode.id.replace('TW', '')) : 0) + index + 1;
           const newNode = {
             id: `TW${String(nextIdNumber).padStart(2, '0')}`,
             twid: newTwid,
-            x: Math.random() * 80 + 10,
-            y: Math.random() * 80 + 10,
+            // Generate mock lat/lng based on the default map center
+            lat: defaultLat + (Math.random() - 0.5) * 0.05,
+            lng: defaultLng + (Math.random() - 0.5) * 0.05,
             location: `${newTwid}`,
             installDate: new Date().toISOString().split('T')[0],
             lastJob: 'Auto-registered'
@@ -77,10 +81,10 @@ export const handleToggleEdge = (db, edges, editingNodeId, targetNodeId) => {
 };
 
 // Updates the position of a draggable node in Firebase
-export const handleUpdateNodePosition = (db, nodes, nodeId, x, y) => {
+export const handleUpdateNodePosition = (db, nodes, nodeId, lat, lng) => {
     const nodeRef = ref(db, `nodes/${nodeId}`);
     const currentNode = nodes.find(n => n.id === nodeId);
     if (currentNode) {
-        set(nodeRef, { ...currentNode, x, y });
+        set(nodeRef, { ...currentNode, lat, lng });
     }
 };

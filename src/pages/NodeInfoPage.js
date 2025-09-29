@@ -9,7 +9,7 @@ const NodeInfoPage = ({ node, onDeleteNode, onStartEditConnections }) => {
                 <h1 className="page-title">Tower Information: {node.id}</h1>
                 <div className="info-grid">
                     <span className="info-label">Location:</span><span>{node.location}</span>
-                    <span className="info-label">Coordinates:</span><span>{`${node.x.toFixed(2)}%, ${node.y.toFixed(2)}%`}</span>
+                    <span className="info-label">Coordinates:</span><span>{`${node.lat.toFixed(4)}, ${node.lng.toFixed(4)}`}</span>
                     <span className="info-label">Installation Date:</span><span>{node.installDate}</span>
                     <span className="info-label">Last Job Done:</span><span>{node.lastJob}</span>
                     <span className="info-label">TWID:</span><span>{node.twid}</span>
